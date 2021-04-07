@@ -54,8 +54,8 @@ def obs_particles(data, start, end, distance):
     return front_values,num_points
 
 def obs_decide(data):
-	start = 84
-	end = 96
+	start = 80
+	end = 100
 	distance = 2.0
 	values,num_points = obs_particles(data,start,end,distance)
 	#print "In range", values
@@ -159,7 +159,6 @@ def laser_callback(data):
         ack_msg.drive.speed = 0.0
     else:
         if end_point - start_point < 1080/2:    #center of obstacle is to the left of car center
-            #TODO:double check that this actually turns right
             ack_msg.drive.steering_angle = max_steering_angle
         else:
             ack_msg.drive.steering_angle = max_steering_angle * -1
