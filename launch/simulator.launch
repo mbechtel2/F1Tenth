@@ -37,7 +37,6 @@
 
   <!-- Launch DontCrash.py -->
   <node pkg="f1tenth_simulator" name="dont_crash" type="DontCrash.py" output="screen">
-    <rosparam command="load" file="$(find f1tenth_simulator)/params.yaml"/>
   </node>
 
   <!-- ***Put launch command for new planner here:-->

@@ -28,7 +28,7 @@ private:
     // Mux indices
     int joy_mux_idx;
     int key_mux_idx;
-    int dont_crash_idx;
+    //int dont_crash_idx;
 
     // Mux controller array
     std::vector<bool> mux_controller;
@@ -79,7 +79,7 @@ public:
         // get mux indices
         n.getParam("joy_mux_idx", joy_mux_idx);
         n.getParam("key_mux_idx", key_mux_idx);
-	n.getParam("dont_crash_idx", dont_crash_idx);
+	//n.getParam("dont_crash_idx", dont_crash_idx);
 
         // get params for joystick calculations
         n.getParam("joy_speed_axis", joy_speed_axis);
@@ -130,9 +130,9 @@ public:
 	// Basic user-created autonomous
         int dont_crash_mux_idx;
         std::string dont_crash_drive_topic;
-        n.getParam("dont_crash_topic", dont_crash_drive_topic);
+        n.getParam("dont_crash_drive_topic", dont_crash_drive_topic);
         n.getParam("dont_crash_mux_idx", dont_crash_mux_idx);
-        add_channel(dont_crash_topic, drive_topic, dont_crash_mux_idx);
+        add_channel(dont_crash_drive_topic, drive_topic, dont_crash_mux_idx);
 
         // ***Add a channel for a new planner here**
         // int new_mux_idx;

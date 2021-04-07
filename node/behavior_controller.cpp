@@ -140,7 +140,7 @@ public:
         n.getParam("random_walk_key_char", random_walk_key_char);
         n.getParam("brake_key_char", brake_key_char);
         n.getParam("nav_key_char", nav_key_char);
-        n.getParam("dont_crash_button_idx", dont_crash_key_char);
+        n.getParam("dont_crash_key_char", dont_crash_key_char);
         // ***Add key char for new planner here***
         // n.getParam("new_key_char", new_key_char);
 
@@ -359,7 +359,7 @@ public:
             toggle_mux(nav_mux_idx, "Navigation");
         }
         // Dont Crash!
-        if (msg.data == dont_crash_key_char) {
+         else if (msg.data == dont_crash_key_char) {
             // new planner
             toggle_mux(dont_crash_mux_idx, "Dont Crash");
         }
