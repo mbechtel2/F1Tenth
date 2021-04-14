@@ -43,6 +43,9 @@ To run the simulator on its own, run:
 
 This will launch everything you need for a full simulation; roscore, the simulator, a preselected map, a model of the racecar and the joystick server.
 
+To run the autonomus script, press the 'l' key while the terminal is selected. 
+This will run the script DontCrash.py. 
+
 To manually control the car using a keyboard, use the standard WASD buttons for acceleration and steering, and pressing the space bar will bring the car to a halt.
 If you are using a joystick, make sure the correct axis is set in ```params.yaml``` for steering and acceleration- this changes between different joysticks
 

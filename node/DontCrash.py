@@ -39,6 +39,25 @@ def getRange(data,angle):
 		return 10.0
 	return data.ranges[int(index)]
 
+# Finds the angle between a side wall and the side of the car
+# parameters:
+# data: LIDAR data
+# theta: angle between ray_a (leading ray) and ray_b (trailing ray)
+# left_side: Boolean, true if checking left wall, false if checking right wall
+def wall_follow_error(data, theta, left_side):
+    start_point = 0 if !left_side else 1080/2
+    end_point = 1080/2 + start_point
+    side_values = list(data.ranges[start_point:end_point]
+    #the angle that goes straight to the side of the car, depending on left or right side
+    car_side_angle = 90 if !left_side else 270
+
+    dist_AB = min(side_values)
+    alpha = 90 - index(min(side_values))*points_per_degree)
+
+    point_b = points_per_degree * car_side_angle
+    point_a = points_per_degree * (car_side-theta) if !left_side else points_per_degree * (270+theta)
+    
+
 def obs_particles(data, start, end, distance):
     num_points = 0
     obs = 0
