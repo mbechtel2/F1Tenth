@@ -39,23 +39,64 @@ def getRange(data,angle):
 		return 10.0
 	return data.ranges[int(index)]
 
+
+# Basic wall-follow prototype
+# just tries to keep 2 perpendicular rays at the same range
+# return a steering_angle
+
+def basic_wall_follow(data, distance, left_side):
+    ray_a = 135
+    ray_b = 45
+    if left_side:
+        ray_a = 225
+        ray_b = 315
+    
+    range_a = data.ranges[ray_a * points_per_degree] 
+    range_b = data.ranges[ray_b * points_per_degree]
+    range_a = distance if range_a > distance else range_a
+    range_b = distance if range_b > distance else range_b
+    
+    steering_angle = 0.0
+    if range_a > range_b:
+        steering_angle = max_steering_angle * -1
+        if left_side:
+            steering_angle = max_steering_angle
+    elif range_b < range_a:
+        steering_angle = max_steering_angle
+        if left_side:
+            steering_angle = max_steering_angle * -1
+    return steering_angle
+
+'''
 # Finds the angle between a side wall and the side of the car
 # parameters:
 # data: LIDAR data
 # theta: angle between ray_a (leading ray) and ray_b (trailing ray)
 # left_side: Boolean, true if checking left wall, false if checking right wall
 def wall_follow_error(data, theta, left_side):
-    start_point = 0 if !left_side else 1080/2
+    if left_side:
+        start_point = 1080/2
+        #the angle that goes perpendiuclar to direction the car is pointing, depending on left or right side
+        car_perp_angle = 270
+        #multiplier to get values that are closer to the front of the car
+        front_multiplier = -1
+    else:
+        start_point = 0
+        car_perp_angle = 90
+        front_multiplier = 1
+        
     end_point = 1080/2 + start_point
-    side_values = list(data.ranges[start_point:end_point]
-    #the angle that goes straight to the side of the car, depending on left or right side
-    car_side_angle = 90 if !left_side else 270
+    side_ranges = list(data.ranges[start_point:end_point]
 
-    dist_AB = min(side_values)
-    alpha = 90 - index(min(side_values))*points_per_degree)
-
-    point_b = points_per_degree * car_side_angle
-    point_a = points_per_degree * (car_side-theta) if !left_side else points_per_degree * (270+theta)
+    index_a = (car_perp_angle + (theta * front_multiplier)) * points_per_degree
+    dist_a = side_ranges(index_a)
+    dist_b = side_ranges(car_perp_angle * points_per_degree)
+    alpha = math.atan((dist_a * math.cos(theta * front_multiplier) - dist_b)/(dist_a * math.sin(theta * front_multiplier)
+    
+    dist_AB_calc = dist_b * math.cos(alpha)
+    dist_AB_meas = min(side_ranges)
+'''
+    
     
 
 def obs_particles(data, start, end, distance):
@@ -157,6 +198,28 @@ def obs_decide(data):
 		#print "End Point", obs_end_point
 		return obs_start_point,obs_end_point
     
+def test_callback(data):
+    ack_msg = AckermannDriveStamped()
+    
+    #Speed: Set constant half max speed
+    ack_msg.drive.speed = max_speed
+
+    start_point,end_point = obs_decide(data)
+
+    if end_point - start_point > (10 * points_per_degree):  
+        #If the obstacle takes more than 10 degrees of the scan in points, stop the car to avoid crash
+        #value chosen as placeholder, needs tuning
+        ack_msg.drive.steering_angle = 0.0
+        ack_msg.drive.speed = 0.0
+    else:
+        ack_msg.drive.steering_angle = basic_wall_follow(data, 1.5, False)
+    
+    #reset prev_angle
+    prev_angle = ack_msg.drive.steering_angle
+    
+    ack_msg.header.stamp = rospy.Time.now()
+    
+    drive_pub.publish(ack_msg)
 
 def laser_callback(data):
     ack_msg = AckermannDriveStamped()
@@ -193,7 +256,7 @@ def laser_callback(data):
 
 if __name__ == '__main__':
     rospy.init_node('dont_crash')
-    rospy.Subscriber("scan", LaserScan, laser_callback)
+    rospy.Subscriber("scan", LaserScan, test_callback)
       
     dont_crash = DontCrash()
     rospy.spin()
