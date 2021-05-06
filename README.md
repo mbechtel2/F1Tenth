@@ -35,6 +35,91 @@ Then run ```catkin_make``` to build it:
     catkin_make
     source devel/setup.bash
 
+### Adding a new autonomous script
+
+Multiple autonomous scripts can be added to the multiplexer. To do so, several setup files need to be modified. 
+
+For the sake of demonstration, assume a new script has been created called "newScript.py" in the node folder that creates a node called "new_autonomous".
+
+Firstly, make sure that the script publishes AckermannDriveStamped messages to some topic, here we will call it "new_drive_topic". With this setup complete, we can configure the other files to run the new script.
+
+In params.yaml, find the section where all of the drive topics are described and add the following lines, based on what your script settings are and what buttons you want to use to activate the new script:
+```
+new_drive_topic: "/new_drive_topic"
+new_drive_key_char: "k"
+new_drive_button_idx: 3
+```
+Note that you should replace the "new_drive" portion of the above with the name of your script topic. The key char parameter can be any keyboard key, and the button index can correspond to any button on a controller. Params.yaml already has sections for each individual setting so that you can check which keys/buttons are already taken.
+
+Still in params.yaml, find the section where mux_size is defined and increment it up by one. Also, below that add a new mux parameter and assign it to the new size of the mux minus 1.
+So if the mux_size was 5 before, the new code should look like this:
+```
+# Indices for mux controller
+mux_size: 6
+joy_mux_idx: 0
+key_mux_idx: 1
+random_walker_mux_idx: 2
+brake_mux_idx: 3
+nav_mux_idx: 4
+# **Add index for new planning method here**
+new_drive_mux_idx: 5
+```
+Next, open simulator.launch from /launch/
+
+Just above the RViz launch section, add your new script the same way you would add to any ROS launch file. So for the example file described earlier, the following should be added:
+```
+<!-- Launch newScript.py -->
+  <node pkg="f1tenth_simulator" name="new_autonomous" type="newScript.py" output="screen">
+    <rosparam command="load" file="$(find f1tenth_simulator)/params.yaml"/>
+  </node>
+```
+Next, open /node/mux.cpp.
+
+In the constructor, find where the topics are loaded from the param files and add the following line at the end:
+```
+n.getParam("new_drive_topic", new_drive_topic);
+```
+Then find the section with the comment `/// Add new channels here:` and add a new block following this pattern:
+```
+int new_drive_mux_idx;
+std::string new_drive_topic;
+n.getParam("new_drive_topic", new_drive_topic);
+n.getParam("new_mux_idx", new_mux_idx);
+add_channel(new_drive_topic, drive_topic, new_mux_idx);
+```
+
+Next, open /node/behavior_controller.cpp.
+
+In the constructor, find the section titled with the comment `// Mux indices`. At the end of that seciton add the following line:
+```
+int new_drive_mux_idx;
+```
+In the sections `// Button indices` and `// Key indices` respectively add the following lines:
+```
+int new_drive_button_idx;
+```
+```
+std::string new_drive_key_char;
+```
+In the section `// Get mux indices` add the following:
+```
+n.getParam("dont_crash_mux_idx", dont_crash_mux_idx);
+n.getParam("dont_crash_button_idx", dont_crash_button_idx);
+n.getParam("dont_crash_key_char", dont_crash_key_char);
+```
+Then find the joy_callback function and add the following lines to the end:
+```
+	    // user-created autonomous
+        if (msg.buttons[new_drive_button_idx]) {
+           toggle_mux(new_drive_mux_idx, "New Autonomous");
+        }
+```
+And add the following lines to the end of the key_callback function:
+```
+         else if (msg.data == new_drive_key_char) {
+            toggle_mux(new_drive_mux_idx, "New Autonomous");
+        }
+```
 ## Quick Start
 
 To run the simulator on its own, run:
