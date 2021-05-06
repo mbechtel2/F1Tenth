@@ -64,7 +64,7 @@ public:
         n.getParam("mux_topic", mux_topic);
         n.getParam("joy_topic", joy_topic);
         n.getParam("keyboard_topic", key_topic);
-	n.getParam("dont_crash_topic", dont_crash_topic);
+		n.getParam("dont_crash_topic", dont_crash_topic);
 
         // Make a publisher for drive messages
         drive_pub = n.advertise<ackermann_msgs::AckermannDriveStamped>(drive_topic, 10);

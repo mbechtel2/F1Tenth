@@ -81,7 +81,7 @@ brake_key_char: "b"
 random_walk_key_char: "r"
 nav_key_char: "n"
 # **Add button for new planning method here**
-dont_crash_key_char: "l"
+dont_crash_key_char: "p"
 new_key_char: "z"
 
 # Keyboard driving params
