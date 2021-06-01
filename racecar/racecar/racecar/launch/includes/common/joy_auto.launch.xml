@@ -1,0 +1,14 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <arg name="racecar_version" default="racecar-v2"/>
+  <arg name="joy_auto_config"
+       default="$(find racecar)/config/racecar-v2/joy_auto.yaml" />
+
+  <rosparam file="$(arg joy_auto_config)" command="load" />
+
+  <node pkg="joy" type="joy_node" name="joy_node" />
+
+  <node pkg="racecar" type="joy_teleop.py" name="joy_teleop" />
+
+  <node pkg="racecar" name="dont_crash" type="DontCrash.py" />
+</launch>
