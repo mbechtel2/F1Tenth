@@ -1,24 +1,25 @@
 #!/usr/bin/env python
 
 import rospy
-from simulator.msg import pid_input
-from ackermann_msgs.msg import AckermannDrive
+from f1tenth_simulator.msg import drive_param
+from f1tenth_simulator.msg import pid_input
+from ackermann_msgs.msg import AckermannDriveStamped
 
 kp = 14.0
 kd = 0.09
 servo_offset = 0	# zero correction offset in case servo is misaligned. 
 prev_error = 0.0 
-vel_input = 25.0	# arbitrarily initialized. 25 is not a special value. This code can accept input desired velocity from the user.
+vel_input = 2	# arbitrarily initialized. 25 is not a special value. This code can accept input desired velocity from the user.
 
-pub = rospy.Publisher("/control", AckermannDrive, queue_size = 1)
-
-# setup a publisher to publish to the /car_x/offboard/command topic for your racecar.
+steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 5)
+# steering_publisher = rospy.Publisher("/wall_follow_drive", AckermannDriveStamped, queue_size = 5)
 
 def control(data):
 	global prev_error
 	global vel_input
 	global kp
 	global kd
+	global ack
 
 	## Your code goes here
 	# 1. Scale the error 
@@ -32,10 +33,11 @@ def control(data):
 		angle = 100
 	## END
 
-	msg = drive_param()
-	msg.velocity = vel_input	
-	msg.angle = angle
-	pub.publish(msg)
+	ack_msg = AckermannDriveStamped()
+	ack_msg.drive.steering_angle = angle
+	ack_msg.drive.speed = vel_input
+	ack_msg.header.stamp = rospy.Time.now()
+	steering_publisher.publish(ack_msg)
 
 if __name__ == '__main__':
 	# global kp

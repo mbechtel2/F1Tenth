@@ -3,7 +3,7 @@
 import rospy
 import math
 from sensor_msgs.msg import LaserScan
-from simulator.msg import pid_input
+from f1tenth_simulator.msg import pid_input
 # Import whatever else you think is necessary
 
 # Some useful variable declarations.
@@ -16,7 +16,7 @@ vel = 20 		# this vel variable is not really used here.
 error = 0.0
 
 # publish to the topic /team_name/error e.g. /team_alpha/error
-pub = rospy.Publisher('error', pid_input, queue_size=10)
+pub = rospy.Publisher('error', pid_input, queue_size=5)
 
 # Input: 	data: Lidar scan data
 # theta: The angle at which the distance is requried
@@ -39,10 +39,10 @@ def getRange(data, theta):
 
 
 def callback(data):
-    theta = 50
+    theta = 120
     a = getRange(data, theta)
     # Note that the 0 implies a horizontal ray..the actual angle for the LIDAR may be 30 degrees and not 0.
-    b = getRange(data, 0)
+    b = getRange(data, 50)
     swing = math.radians(theta)
 
     # Your code goes here to compute alpha, AB, and CD..and finally the error.

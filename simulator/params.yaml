@@ -73,7 +73,6 @@ random_walk_button_idx: 1 # ? button
 nav_button_idx: 5 # RB button
 # **Add button for new planning method here**
 dont_crash_button_idx: 2 # X button
-wall_follow_idx: 3
 new_button_idx: -1
 
 # Keyboard characters for toggling mux
@@ -115,7 +114,7 @@ brake_drive_topic: "/brake"
 nav_drive_topic: "/nav"
 # **Add name for new planning method here**
 dont_crash_drive_topic: "/dont_crash_drive"
-wall_follow_topic: "/wall_follow"
+wall_follow_topic: "/wall_follow_drive"
 new_drive_topic: "/new_drive"
 
 # name of file to write collision log to 

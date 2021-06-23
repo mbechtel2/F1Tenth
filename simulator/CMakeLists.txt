@@ -60,6 +60,14 @@ if(DEFINED CATKIN_DEVEL_PREFIX)
     message_generation
     )
 
+## Generate messages in the 'msg' folder
+	add_message_files(
+		FILES
+		drive_param.msg
+		drive_values.msg
+    	pid_input.msg
+	)
+
   generate_messages(
     DEPENDENCIES
     std_msgs

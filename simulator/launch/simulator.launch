@@ -51,9 +51,9 @@
   </node>
   
   <!-- Launch DontCrash.py -->
-  <!-- <node pkg="f1tenth_simulator" name="dont_crash" type="DontCrash.py" output="screen">
+  <node pkg="f1tenth_simulator" name="dont_crash" type="DontCrash.py" output="screen">
     <rosparam command="load" file="$(find f1tenth_simulator)/params.yaml"/>
-  </node> -->
+  </node>
 
   <!-- ***Put launch command for new planner here:-->
   <!-- Launch the New Planner Node -->
