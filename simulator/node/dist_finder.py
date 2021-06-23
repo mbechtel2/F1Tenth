@@ -3,7 +3,7 @@
 import rospy
 import math
 from sensor_msgs.msg import LaserScan
-from race.msg import pid_input
+from simulator.msg import pid_input
 # Import whatever else you think is necessary
 
 # Some useful variable declarations.
@@ -24,10 +24,10 @@ pub = rospy.Publisher('error', pid_input, queue_size=10)
 
 
 def getRange(data, theta):
-# Find the index of the array that corresponds to angle theta.
-# Return the lidar scan value at that index
-# Do some error checking for NaN and ubsurd values
-# Your code goes here
+    # Find the index of the array that corresponds to angle theta.
+    # Return the lidar scan value at that index
+    # Do some error checking for NaN and ubsurd values
+    # Your code goes here
     if theta > angle_range:
         theta = angle_range
     elif theta < 0:
@@ -35,37 +35,40 @@ def getRange(data, theta):
 
     index = theta * len(data.ranges) / angle_range
     dist = data.ranges[int(index)]
-	return dist
+    return dist
 
 
 def callback(data):
-	theta = 50
-	a = getRange(data, theta)
-	# Note that the 0 implies a horizontal ray..the actual angle for the LIDAR may be 30 degrees and not 0.
-	b = getRange(data, 0)
-	swing = math.radians(theta)
+    theta = 50
+    a = getRange(data, theta)
+    # Note that the 0 implies a horizontal ray..the actual angle for the LIDAR may be 30 degrees and not 0.
+    b = getRange(data, 0)
+    swing = math.radians(theta)
 
-	# Your code goes here to compute alpha, AB, and CD..and finally the error.
+    # Your code goes here to compute alpha, AB, and CD..and finally the error.
     # Calculations seen at https://linklab-uva.github.io/autonomousracing/assets/files/assgn4_2021.pdf
+
     alpha = math.atan((a * math.cos(swing) - b) / (a * math.sin(swing)))
     AB = b * math.cos(alpha)
     CD = AB + car_length * math.sin(alpha)
 
     error = desired_trajectory - CD
-	# END
+    # END
 
-	msg = pid_input()
-	msg.pid_error = error		# this is the error that you want to send to the PID for steering correction.
-	msg.pid_vel = vel		# velocity error is only provided as an extra credit field.
-	pub.publish(msg)
+    msg = pid_input()
+    # this is the error that you want to send to the PID for steering correction.
+    msg.pid_error = error
+    # velocity error is only provided as an extra credit field.
+    msg.pid_vel = vel
+    pub.publish(msg)
 
 
 if __name__ == '__main__':
-	print("Laser node started")
-	# name your node team_name_dist_finder e.g. team_alpha_dist_finder
-	rospy.init_node('dist_finder',anonymous = True)
+    print("Laser node started")
+    # name your node team_name_dist_finder e.g. team_alpha_dist_finder
+    rospy.init_node('dist_finder', anonymous=True)
 
-	# subscribe to the correct /team_name/scan topic for your team's car..
-	rospy.Subscriber("scan",LaserScan,callback)
+    # subscribe to the correct /team_name/scan topic for your team's car..
+    rospy.Subscriber("scan", LaserScan, callback)
 
-	rospy.spin()
+    rospy.spin()

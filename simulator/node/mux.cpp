@@ -58,13 +58,15 @@ public:
         n = ros::NodeHandle("~");
 
         // get topic names
-        std::string drive_topic, mux_topic, joy_topic, key_topic, random_walk_topic, dont_crash_topic;
+        std::string drive_topic, mux_topic, joy_topic, key_topic, random_walk_topic, dont_crash_topic, wall_follow_topic;
         n.getParam("random_walk_topic", random_walk_topic);
         n.getParam("drive_topic", drive_topic);
         n.getParam("mux_topic", mux_topic);
         n.getParam("joy_topic", joy_topic);
         n.getParam("keyboard_topic", key_topic);
 		n.getParam("dont_crash_topic", dont_crash_topic);
+        n.getParam("wall_follow_topic", wall_follow_topic);
+
 
         // Make a publisher for drive messages
         drive_pub = n.advertise<ackermann_msgs::AckermannDriveStamped>(drive_topic, 10);
@@ -134,6 +136,12 @@ public:
         n.getParam("dont_crash_mux_idx", dont_crash_mux_idx);
         add_channel(dont_crash_drive_topic, drive_topic, dont_crash_mux_idx);
 
+        // Add a channel for a new planner here**
+        int wall_follow_mux_idx;
+        std::string wall_follow_drive_topic;
+        n.getParam("wall_follow_drive_topic", wall_follow_drive_topic);
+        n.getParam("wall_follow_mux_idx", wall_follow_mux_idx);
+        add_channel(wall_follow_drive_topic, drive_topic, wall_follow_mux_idx);
         // ***Add a channel for a new planner here**
         // int new_mux_idx;
         // std::string new_drive_topic;

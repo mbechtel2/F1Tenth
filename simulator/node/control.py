@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
-from race.msg import pid_input
+from simulator.msg import pid_input
 from ackermann_msgs.msg import AckermannDrive
 
 kp = 14.0
@@ -10,7 +10,8 @@ servo_offset = 0	# zero correction offset in case servo is misaligned.
 prev_error = 0.0 
 vel_input = 25.0	# arbitrarily initialized. 25 is not a special value. This code can accept input desired velocity from the user.
 
-pub = rospy.Publisher()
+pub = rospy.Publisher("/control", AckermannDrive, queue_size = 1)
+
 # setup a publisher to publish to the /car_x/offboard/command topic for your racecar.
 
 def control(data):
@@ -23,8 +24,12 @@ def control(data):
 	# 1. Scale the error 
 	# 2. Apply the PID equation on error to compute steering
 	# 3. Make sure the steering value is within bounds
- 	
-
+	angle = kp * data.pid_error + kp * (data.pid_error - prev_error)
+	prev_error = data.pid_error
+	if angle < -100:
+		angle = -100
+	if angle > 100:
+		angle = 100
 	## END
 
 	msg = drive_param()
@@ -33,13 +38,13 @@ def control(data):
 	pub.publish(msg)
 
 if __name__ == '__main__':
-	global kp
-	global kd
-	global vel_input
-	print("Listening to error for PID")
-	kp = input("Enter Kp Value: ")
-	kd = input("Enter Kd Value: ")
-	vel_input = input("Enter Velocity: ")
+	# global kp
+	# global kd
+	# global vel_input
+	# print("Listening to error for PID")
+	# kp = input("Enter Kp Value: ")
+	# kd = input("Enter Kd Value: ")
+	# vel_input = input("Enter Velocity: ")
 	rospy.init_node('pid_controller', anonymous=True)
 	rospy.Subscriber("error", pid_input, control)
 	rospy.spin()
