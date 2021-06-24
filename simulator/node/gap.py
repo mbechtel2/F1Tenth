@@ -15,7 +15,7 @@ desired_trajectory = 1
 vel = 20 		# this vel variable is not really used here.
 error = 0.0
 
-pub = rospy.Publisher('error', pid_input, queue_size=5)
+# pub = rospy.Publisher('error', pid_input, queue_size=5)
 
 # Input: 	data: Lidar scan data
 # theta: The angle at which the distance is requried
@@ -38,22 +38,15 @@ def getRange(data, theta):
 
 
 def callback(data):
+    # horizontal angle for 270 degree LIDAR is at 45 degrees
     horizontal = 45
-    theta = 50
-    a = getRange(data, horizontal + theta)
-    # Note that the 0 implies a horizontal ray..the actual angle for the LIDAR may be 30 degrees and not 0.
-    b = getRange(data, horizontal)
-    swing = math.radians(theta)
-
-    # Your code goes here to compute alpha, AB, and CD..and finally the error.
-    # Calculations seen at https://linklab-uva.github.io/autonomousracing/assets/files/assgn4_2021.pdf
-
-    alpha = math.atan((a * math.cos(swing) - b) / (a * math.sin(swing)))
-    AB = b * math.cos(alpha)
-    CD = AB + car_length * math.sin(alpha)
-
-    error = desired_trajectory - CD
-    # END
+    # theta is the end of the arc that we want to scan
+    theta = 180
+    # get array of ranges
+    ranges = []
+    for i in range(horizontal, theta):
+        ranges[i] = getRange(data, i)
+    ## callback function to be added here for follow-the-gap method
 
     msg = pid_input()
     # this is the error that you want to send to the PID for steering correction.

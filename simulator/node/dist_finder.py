@@ -11,8 +11,8 @@ angle_range = 270		# sensor angle range of the lidar
 # distance (in m) that we project the car forward for correcting the error. You may want to play with this.
 car_length = 1.5
 # distance from the wall (left or right - we cad define..but this is defined for right). You should try different values
-desired_trajectory = 1
-vel = 20 		# this vel variable is not really used here.
+desired_trajectory = 0.7
+vel = 5 		# this vel variable is not really used here.
 error = 0.0
 
 # publish to the topic /team_name/error e.g. /team_alpha/error
@@ -40,7 +40,7 @@ def getRange(data, theta):
 
 def callback(data):
     horizontal = 45
-    theta = 50
+    theta = 70
     a = getRange(data, horizontal + theta)
     # Note that the 0 implies a horizontal ray..the actual angle for the LIDAR may be 30 degrees and not 0.
     b = getRange(data, horizontal)
