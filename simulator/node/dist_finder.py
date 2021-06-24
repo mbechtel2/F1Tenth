@@ -39,10 +39,11 @@ def getRange(data, theta):
 
 
 def callback(data):
-    theta = 120
-    a = getRange(data, theta)
+    horizontal = 45
+    theta = 50
+    a = getRange(data, horizontal + theta)
     # Note that the 0 implies a horizontal ray..the actual angle for the LIDAR may be 30 degrees and not 0.
-    b = getRange(data, 50)
+    b = getRange(data, horizontal)
     swing = math.radians(theta)
 
     # Your code goes here to compute alpha, AB, and CD..and finally the error.

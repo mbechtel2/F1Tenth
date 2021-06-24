@@ -197,9 +197,9 @@ def decide_obstacle_direction(data,start_point,end_point):
 
 def followRight(data,desired_trajectory):
 	global alpha
-	a = getRange(data,45)
-	b = getRange(data,80)
-	swing = math.radians(35)
+	a = getRange(data,90)
+	b = getRange(data,45)
+	swing = math.radians(90)
 	alpha = math.atan((a*math.cos(swing)-b)/(a*math.sin(swing)))
 	#print "Alpha right",math.degrees(alpha)
 	curr_dist = b*math.cos(alpha)
@@ -211,9 +211,9 @@ def followRight(data,desired_trajectory):
 
 def followLeft(data,desired_trajectory):
 	global alpha
-	a = getRange(data,190)
+	a = getRange(data,180)
 	b = getRange(data,225)
-	swing = math.radians(35)
+	swing = math.radians(180)
 	alpha = -math.atan((a*math.cos(swing)-b)/(a*math.sin(swing)))
 	#print "Alpha left",math.degrees(alpha)
 	curr_dist = b*math.cos(alpha)
