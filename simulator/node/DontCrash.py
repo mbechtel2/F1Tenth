@@ -12,7 +12,7 @@ from sensor_msgs.msg import LaserScan
 
 steering_publisher = rospy.Publisher("/dont_crash_drive", AckermannDriveStamped, queue_size = 1)
 
-angle_range = 360
+angle_range = 270
 car_length = 1.5
 desired_trajectory = 0
 vel = 15
@@ -165,8 +165,8 @@ def decide_obstacle_direction(data,start_point,end_point):
 		end_pointdistance = laser_end*math.cos(math.radians(end_point))
 		#print "Right Width",start_pointdistance
 		#print "left Width",end_pointdistance
-		car_dist_right = getRange(data,0)*math.cos(alpha)
-		car_dist_left = getRange(data,179)*math.cos(alpha)
+		car_dist_right = getRange(data,45)*math.cos(alpha)
+		car_dist_left = getRange(data,225)*math.cos(alpha)
 		#print "Car dist right",car_dist_right
 		#print "Car dist left",car_dist_left
 		obstacle_distance_left = 0.0
@@ -199,7 +199,7 @@ def followRight(data,desired_trajectory):
 	global alpha
 	a = getRange(data,90)
 	b = getRange(data,45)
-	swing = math.radians(90)
+	swing = math.radians(45)
 	alpha = math.atan((a*math.cos(swing)-b)/(a*math.sin(swing)))
 	#print "Alpha right",math.degrees(alpha)
 	curr_dist = b*math.cos(alpha)
@@ -213,7 +213,7 @@ def followLeft(data,desired_trajectory):
 	global alpha
 	a = getRange(data,180)
 	b = getRange(data,225)
-	swing = math.radians(180)
+	swing = math.radians(45)
 	alpha = -math.atan((a*math.cos(swing)-b)/(a*math.sin(swing)))
 	#print "Alpha left",math.degrees(alpha)
 	curr_dist = b*math.cos(alpha)
@@ -224,16 +224,16 @@ def followLeft(data,desired_trajectory):
 
 def followCentre(data,desired_trajectory):
 	global alpha
-	a = getRange(data,115)
-	b = getRange(data,155)
-	swing = math.radians(40)
+	a = getRange(data,135)
+	b = getRange(data,180)
+	swing = math.radians(45)
 	alpha = -math.atan((a*math.cos(swing)-b)/(a*math.sin(swing)))
 	#print "Alpha left",math.degrees(alpha)
 	curr_dist = b*math.cos(alpha)
 	future_dist1 = curr_dist-car_length*math.sin(alpha)
-	a = getRange(data,50)
-	b = getRange(data,0)
-	swing = math.radians(50)
+	a = getRange(data,135)
+	b = getRange(data,90)
+	swing = math.radians(45)
 	alpha = math.atan((a*math.cos(swing)-b)/(a*math.sin(swing)))
 	#print "Alpha right",math.degrees(alpha)
 	curr_dist = b*math.cos(alpha)
@@ -329,7 +329,7 @@ def laser_callback(data):
 	
 	speed = 1.0
 	stop_dist = 0.5
-	if getRange(data, 160) < stop_dist or getRange(data, 200) < stop_dist:
+	if getRange(data, 115) < stop_dist or getRange(data, 155) < stop_dist:
 	    speed = 0.0
 	    #print 'something in the way'
 	

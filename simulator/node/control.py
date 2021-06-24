@@ -11,8 +11,8 @@ servo_offset = 0	# zero correction offset in case servo is misaligned.
 prev_error = 0.0 
 vel_input = 2	# arbitrarily initialized. 25 is not a special value. This code can accept input desired velocity from the user.
 
-steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 5)
-# steering_publisher = rospy.Publisher("/wall_follow_drive", AckermannDriveStamped, queue_size = 5)
+# steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 5)
+steering_publisher = rospy.Publisher("/wall_follow_drive", AckermannDriveStamped, queue_size = 5)
 
 def control(data):
 	global prev_error
