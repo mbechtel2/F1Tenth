@@ -49,7 +49,12 @@
   <node pkg="f1tenth_simulator" name="control" type="control.py" output="screen">
     <rosparam command="load" file="$(find f1tenth_simulator)/params.yaml"/>
   </node>
-  
+
+  <!-- Launch gap.py -->
+  <node pkg="f1tenth_simulator" name="gap" type="gap.py" output="screen">
+    <rosparam command="load" file="$(find f1tenth_simulator)/params.yaml"/>
+  </node>
+
   <!-- Launch DontCrash.py -->
   <node pkg="f1tenth_simulator" name="dont_crash" type="DontCrash.py" output="screen">
     <rosparam command="load" file="$(find f1tenth_simulator)/params.yaml"/>
