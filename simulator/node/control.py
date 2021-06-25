@@ -10,8 +10,8 @@ kd = 0.09
 servo_offset = 0	# zero correction offset in case servo is misaligned. 
 prev_error = 0.0 
 
-steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 5)
-# steering_publisher = rospy.Publisher("/wall_follow_drive", AckermannDriveStamped, queue_size = 5)
+# steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 5)
+steering_publisher = rospy.Publisher("/wall_follow_drive", AckermannDriveStamped, queue_size = 5)
 
 def control(data):
 	global prev_error
