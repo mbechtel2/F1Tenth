@@ -63,7 +63,7 @@ def callback(data):
         # check edge from small to large and extend
         elif (ranges[i + 1] - ranges[i]) > 1:
             # extend more if the distance is smaller 
-            adj = int(25 / ranges[i])
+            adj = int(40 / ranges[i])
             value = ranges[i]
         i += 1
     i = theta - 1
@@ -76,7 +76,7 @@ def callback(data):
         # check edge from small to large and extend
         elif (ranges[i - 1] - ranges[i]) > 1:
             # extend more if the distance is smaller 
-            adj = int(25/ ranges[i])
+            adj = int(40 / ranges[i])
             value = ranges[i]
         i -= 1
 
@@ -89,7 +89,7 @@ def callback(data):
     #         ranges[-i-2] = min(ranges[-i-1], ranges[-i-2])
 
     index = ranges.index(max(ranges))
-    vel = 1.2 + (0.3 * ranges[index])
+    vel = 1.2 + (0.5 * ranges[index])
     ack_msg = AckermannDriveStamped()
     ack_msg.drive.steering_angle = (index - 50) / 10 / vel
     ack_msg.drive.speed = vel
