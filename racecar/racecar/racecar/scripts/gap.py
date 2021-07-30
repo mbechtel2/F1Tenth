@@ -14,7 +14,7 @@ car_length = 1.5
 vel = 1 		# this vel variable is not really used here.
 error = 0.0
 
-steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 3)
+steering_publisher = rospy.Publisher("/drive", AckermannDriveStamped, queue_size = 5)
 
 # Input: 	data: Lidar scan data
 # theta: The angle at which the distance is requried
@@ -49,41 +49,18 @@ def callback(data):
     ## callback function to be added here for follow-the-gap method
 
     # obstacle correction
-
-    i = 0
-    value = 0
-    adj = 0
-    # scan both left to right and right to left
-    while i < theta - 2:
-        if i >= theta - 2:
-            break
-        if adj > 0:
-            ranges[i] = value
-            adj -= 1
-        # check edge from small to large and extend
-        elif (ranges[i + 1] - ranges[i]) > 1:
-            # extend more if the distance is smaller 
-            adj = int(40 / ranges[i])
-            value = ranges[i]
-        i += 1
-    i = theta - 1
-    while i > 1:
-        if i <= 1:
-            break
-        if adj > 0:
-            ranges[i] = value
-            adj -= 1
-        # check edge from small to large and extend
-        elif (ranges[i - 1] - ranges[i]) > 1:
-            # extend more if the distance is smaller 
-            adj = int(40 / ranges[i])
-            value = ranges[i]
-        i -= 1
+    for i in range(0, theta/2):
+        if abs(ranges[i] - ranges[i+1]) > 1:
+            ranges[i] = min(ranges[i], ranges[i+1])
+            ranges[i+1] = min(ranges[i], ranges[i+1])
+        if abs(ranges[-i-1] - ranges[-i-2]) > 1:
+            ranges[-i-1] = min(ranges[-i-1], ranges[-i-2])
+            ranges[-i-2] = min(ranges[-i-1], ranges[-i-2])
 
     index = ranges.index(max(ranges))
-    vel = 1.2 + (0.5 * ranges[index])
+    vel = 1.5 + (0.55 * ranges[index])
     ack_msg = AckermannDriveStamped()
-    ack_msg.drive.steering_angle = (index - 50) / 10 / vel
+    ack_msg.drive.steering_angle = (index - 50) / 2.5 / vel
     ack_msg.drive.speed = vel
     ack_msg.header.stamp = rospy.Time.now()
     steering_publisher.publish(ack_msg)
