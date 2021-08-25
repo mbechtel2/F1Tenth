@@ -39,11 +39,11 @@ def getRange(data, theta):
 
 def callback(data):
     # horizontal angle for 270 degree LIDAR is at 45 degrees
-    horizontal = 85
+    horizontal = 75
     # theta is the end of the arc that we want to scan
-    theta = 100
+    theta = 120
     # get array of ranges
-    ranges = [0] * 100
+    ranges = [0] * theta
     for i in range(0, theta):
         ranges[i] = getRange(data, i + horizontal)
     ## callback function to be added here for follow-the-gap method
@@ -63,7 +63,7 @@ def callback(data):
         # check edge from small to large and extend
         elif (ranges[i + 1] - ranges[i]) > 1:
             # extend more if the distance is smaller 
-            adj = int(40 / ranges[i])
+            adj = int(100 /  (ranges[i] + 1))
             value = ranges[i]
         i += 1
     i = theta - 1
@@ -76,14 +76,19 @@ def callback(data):
         # check edge from small to large and extend
         elif (ranges[i - 1] - ranges[i]) > 1:
             # extend more if the distance is smaller 
-            adj = int(40 / ranges[i])
+            adj = int(100 / (ranges[i] + 1))
             value = ranges[i]
         i -= 1
 
     index = ranges.index(max(ranges))
     vel = 1.2 + (0.5 * ranges[index])
+    angle = (index - 60) / 10 / vel
+    if angle > 50:
+        angle = 50
+    elif angle < -50:
+        angle = -50
     ack_msg = AckermannDriveStamped()
-    ack_msg.drive.steering_angle = (index - 50) / 10 / vel
+    ack_msg.drive.steering_angle = angle
     ack_msg.drive.speed = vel
     ack_msg.header.stamp = rospy.Time.now()
     steering_publisher.publish(ack_msg)

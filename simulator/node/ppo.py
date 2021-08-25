@@ -14,15 +14,12 @@ import rospkg
 import os
 import sys
 cwd = os.path.dirname(os.path.realpath(__file__))
-print(f'CWD: {cwd}')
 parent = cwd
 for _ in range(2): parent = os.path.dirname(parent)
 target = os.path.join(parent, 'openai_ros', 'openai_ros', 'src', 'openai_ros', 'task_envs', 'f1tenth')
-print(f'Target: {target}')
-print(os.listdir(target))
 sys.path.append(target)
 from f1tenth import F1Tenth
-print(F1Tenth)
+
 
 
 if __name__ == '__main__':

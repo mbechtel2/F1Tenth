@@ -72,9 +72,11 @@ class ROSLauncher(object):
 
             rospy.logwarn("path_launch_file_name=="+str(path_launch_file_name))
 
-            source_env_command = "source "+ros_ws_abspath+"/devel/setup.bash;"
+            # source_env_command = "source "+ros_ws_abspath+"/devel/setup.bash;"
             roslaunch_command = "roslaunch  {0} {1}".format(rospackage_name, launch_file_name)
-            command = source_env_command+roslaunch_command
+            # command = source_env_command+roslaunch_command            
+            command = roslaunch_command
+
             rospy.logwarn("Launching command="+str(command))
 
             p = subprocess.Popen(command, shell=True)

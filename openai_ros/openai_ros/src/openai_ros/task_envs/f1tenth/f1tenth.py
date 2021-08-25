@@ -23,7 +23,7 @@ class F1Tenth(f1tenth_env.F1TenthEnv):
         # This is the path where the simulation files, the Task and the Robot gits will be downloaded if not there
         # This parameter HAS to be set up in the MAIN launch of the AI RL script
         # ros_ws_abspath = rospy.get_param("/f1tenth/ros_ws_abspath", None)
-        ros_ws_abspath = "/home/qitao/simulator_ws"
+        ros_ws_abspath = "/home/wengqt/sim_ws"
         assert ros_ws_abspath is not None, "You forgot to set ros_ws_abspath in your yaml file of your main RL script. Set ros_ws_abspath: \'YOUR/SIM_WS/PATH\'"
         assert os.path.exists(ros_ws_abspath), "The Simulation ROS Workspace path "+ros_ws_abspath + \
             " DOESNT exist, execute: mkdir -p "+ros_ws_abspath + \
